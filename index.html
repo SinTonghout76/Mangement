@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hout Website</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+
+      .float-hover {
+        transition: all 0.3s ease;
+      }
+
+      .float-hover:hover {
+        transform: translateY(-15px) scale(1.08);
+        filter: drop-shadow(0 20px 25px rgba(0, 0, 0, 0.2));
+      }
+    </style>
+  </head>
+  <body class="bg-green-50 text-gray-800">
+    <!-- Navbar -->
+    <nav class="fixed w-full bg-white shadow z-50">
+      <div
+        class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center"
+      >
+        <h1 class="text-xl font-bold text-green-600">
+          <a href="index.html">Hout Management</a>
+        </h1>
+        <ul class="flex space-x-6 font-medium">
+          <li><a href="/index.html" class="hover:text-green-500">Home</a></li>
+          <li><a href="/project.html" class="hover:text-green-500">Project</a></li>
+          <li>
+            <a href="/aboutme.html" class="hover:text-green-500">About Me</a>
+          </li>
+          <li>
+            <a href="/profile.html" class="hover:text-green-500">Profile</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="h-screen flex items-center justify-center">
+      <div
+        class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-20 items-center"
+      >
+        <!-- Left Text -->
+        <div>
+          <h2 class="text-4xl md:text-5xl font-bold text-green-600 mb-4">
+            Welcome to<br />Hout Management.<br />
+            <span class="text-lg md:text-xl font-normal text-gray-600">
+              Manage everything with hout
+            </span>
+          </h2>
+        </div>
+
+        <!-- Right Image -->
+        <div class="flex justify-center">
+          <img
+            src="cube.png"
+            class="w-96 md:w-[28rem] transition duration-300 float-hover"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 bg-white text-center">
+      <h2 class="text-3xl font-bold text-green-600 mb-10">Projects</h2>
+
+      <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 px-6">
+        <!-- Card 1 -->
+        <a href="football-bet/index.html">
+          <div
+            class="bg-green-50 p-6 rounded-2xl shadow hover:shadow-lg transition"
+          >
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/77/77305.png"
+              alt="Football Bet"
+              class="w-full h-40 object-contain mb-4"
+            />
+            <h3 class="text-xl font-semibold mb-2">Football Bet</h3>
+            <p class="text-gray-600">Manage football bets efficiently.</p>
+          </div>
+        </a>
+
+        <!-- Card 2 -->
+        <a href="8bp-management/index.html">
+          <div
+            class="bg-green-50 p-6 rounded-2xl shadow hover:shadow-lg transition"
+          >
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiF7ycr4ajEOAyjVsMJLvui45J1LFOC_o0Iw&s"
+              alt="8 Ball Pool"
+              class="w-full h-40 object-contain mb-4"
+            />
+            <h3 class="text-xl font-semibold mb-2">8 Ball Pool</h3>
+            <p class="text-gray-600">8BP Management system.</p>
+          </div>
+        </a>
+
+        <!-- Card 3 -->
+        <a href="gmail-management/index.html">
+          <div
+            class="bg-green-50 p-6 rounded-2xl shadow hover:shadow-lg transition"
+          >
+            <img
+              src="https://images.icon-icons.com/2642/PNG/512/google_mail_gmail_logo_icon_159346.png"
+              alt="Gmail Account"
+              class="w-full h-40 object-contain mb-4"
+            />
+            <h3 class="text-xl font-semibold mb-2">Gmail Account</h3>
+            <p class="text-gray-600">Manage your Gmail accounts easily.</p>
+          </div>
+        </a>
+      </div>
+
+      <a href="/project.html">
+        <button
+          class="mt-10 px-6 py-3 bg-green-500 text-white rounded-full hover:bg-green-600 transition"
+        >
+          See Projects
+        </button>
+      </a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-green-600 text-white py-10">
+      <div
+        class="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8 text-center md:text-left"
+      >
+        <!-- Website Name -->
+        <div>
+          <h3 class="text-xl font-bold mb-3">Hout Management</h3>
+          <p class="text-green-100">Modern website management solutions.</p>
+        </div>
+
+        <!-- Contents -->
+        <div>
+          <h3 class="text-xl font-bold mb-3">Contents</h3>
+          <ul class="space-y-2 text-green-100">
+            <li><a href="/index.html" class="hover:underline">Home</a></li>
+            <li><a href="/project.html" class="hover:underline">Projects</a></li>
+            <li>
+              <a href="/aboutme.html" class="hover:underline">About Me</a>
+            </li>
+            <li><a href="/profile.html" class="hover:underline">Profile</a></li>
+          </ul>
+        </div>
+
+        <!-- Social Media -->
+        <div>
+          <h3 class="text-xl font-bold mb-3">Social Media</h3>
+          <div class="flex justify-center md:justify-start space-x-4 text-2xl">
+            <a href="#" class="hover:text-white"
+              ><i class="fab fa-facebook"></i
+            ></a>
+            <a href="#" class="hover:text-white"
+              ><i class="fab fa-twitter"></i
+            ></a>
+            <a href="#" class="hover:text-white"
+              ><i class="fab fa-linkedin"></i
+            ></a>
+            <a href="#" class="hover:text-white"
+              ><i class="fab fa-github"></i
+            ></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-8 text-green-200">
+        <p>© 2026 Hout Management. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>

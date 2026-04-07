@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About Me</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+    </style>
+  </head>
+
+  <body class="bg-green-50 text-gray-800">
+    <!-- NAVBAR -->
+    <nav class="fixed w-full bg-white shadow z-50">
+      <div
+        class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center"
+      >
+        <h1 class="text-xl font-bold text-green-600">
+          <a href="/index.html">Hout Management</a>
+        </h1>
+        <ul class="flex space-x-6 font-medium">
+          <li><a href="/index.html" class="hover:text-green-500">Home</a></li>
+          <li>
+            <a href="/project.html" class="hover:text-green-500">Project</a>
+          </li>
+          <li>
+            <a href="/aboutme.html" class="text-green-600 font-semibold"
+              >About Me</a
+            >
+          </li>
+          <li>
+            <a href="/profile.html" class="hover:text-green-500">Profile</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- SECTION -->
+    <section class="pt-32 pb-20" >
+      <div class="max-w-5xl mx-auto px-6 text-center" style="font-size: 20pt">
+        <!-- Title -->
+        <h2 class="text-4xl font-bold text-green-600 mb-3">About Me</h2>
+        <p class="text-gray-500 mb-10">Get to know more about me</p>
+
+        <!-- IMAGE -->
+        <div class="flex justify-center mb-8">
+          <img
+            id="aboutImage"
+            class="rounded-3xl shadow-lg border-4 border-green-200 w-60 h-60 object-cover"
+          />
+        </div>
+
+        <!-- NAME WITH VERIFIED BADGE -->
+        <h3
+          id="aboutName"
+          class="text-2xl font-semibold mb-4 flex items-center justify-center gap-2"
+        >
+          <span></span>
+          <i class="fas fa-check-circle text-green-500" title="Verified"></i>
+        </h3>
+
+        <!-- DESCRIPTION -->
+        <p id="aboutDesc1" class="text-gray-600 mb-3 max-w-2xl mx-auto"></p>
+        <p id="aboutDesc2" class="text-gray-600 mb-6 max-w-2xl mx-auto"></p>
+
+        <!-- SKILLS -->
+        <div>
+          <h4 class="font-semibold mb-3">Skills</h4>
+          <div
+            id="skillsList"
+            class="flex justify-center flex-wrap gap-2"
+          ></div>
+        </div>
+
+        
+      </div>
+      <!-- EDIT BUTTON -->
+       <center>
+
+           <div class="mt-10">
+             <button
+               onclick="openEdit()"
+               class="bg-green-600 text-white px-6 py-2 rounded-xl shadow hover:bg-green-700"
+             >
+               Edit Content
+             </button>
+           </div>
+       </center>
+    </section>
+
+    <!-- MODAL -->
+    <div
+      id="editModal"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center"
+    >
+      <div class="bg-white p-6 rounded-2xl w-full max-w-lg">
+        <h3 class="text-xl font-bold mb-4">Edit About Me</h3>
+
+        <input
+          id="inImageURL"
+          class="w-full border p-2 mb-2"
+          placeholder="Image URL"
+        />
+        <input type="file" id="inImageFile" class="w-full border p-2 mb-2" />
+
+        <input id="inName" class="w-full border p-2 mb-2" placeholder="Name" />
+        <textarea
+          id="inDesc1"
+          class="w-full border p-2 mb-2"
+          placeholder="Description 1"
+        ></textarea>
+        <textarea
+          id="inDesc2"
+          class="w-full border p-2 mb-2"
+          placeholder="Description 2"
+        ></textarea>
+
+        <input
+          id="inSkills"
+          class="w-full border p-2 mb-2"
+          placeholder="Skills (comma separated)"
+        />
+
+        <div class="flex justify-end gap-2">
+          <button onclick="closeEdit()" class="px-4 py-2">Cancel</button>
+          <button
+            onclick="saveAbout()"
+            class="bg-green-600 text-white px-4 py-2 rounded"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+    <br /><br /><br />
+
+    <!-- FOOTER -->
+    <footer class="bg-green-600 text-white py-10">
+      <div
+        class="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8 text-center md:text-left"
+      >
+        <div>
+          <h3 class="text-xl font-bold mb-3">Hout Management</h3>
+          <p class="text-green-100">Modern website management solutions.</p>
+        </div>
+
+        <div>
+          <h3 class="text-xl font-bold mb-3">Contents</h3>
+          <ul class="space-y-2 text-green-100">
+            <li><a href="/index.html" class="hover:underline">Home</a></li>
+            <li>
+              <a href="/project.html" class="hover:underline">Projects</a>
+            </li>
+            <li>
+              <a href="/aboutme.html" class="hover:underline">About Me</a>
+            </li>
+            <li><a href="/profile.html" class="hover:underline">Profile</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-xl font-bold mb-3">Social Media</h3>
+          <div class="flex justify-center md:justify-start space-x-4 text-2xl">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-8 text-green-200">
+        <p>© 2026 Hout Management. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- SCRIPT -->
+    <script>
+      const defaultAbout = {
+        name: "Sin TongHout",
+        image: "https://ui-avatars.com/api/?name=Hout",
+        desc1: "I am a passionate student studying IT and Biology.",
+        desc2:
+          "I love building modern web applications and learning new technologies.",
+        skills: ["HTML", "CSS", "JavaScript", "Bootstrap", "Tailwind"],
+      };
+
+      function getAbout() {
+        let data = localStorage.getItem("about");
+        if (!data) {
+          localStorage.setItem("about", JSON.stringify(defaultAbout));
+          return defaultAbout;
+        }
+        return JSON.parse(data);
+      }
+
+      function loadAbout() {
+        let a = getAbout();
+
+        // Inject name into span inside h3
+        aboutName.querySelector("span").innerText = a.name;
+
+        aboutDesc1.innerText = a.desc1;
+        aboutDesc2.innerText = a.desc2;
+        aboutImage.src = a.image;
+
+        skillsList.innerHTML = "";
+        a.skills.forEach((s) => {
+          skillsList.innerHTML += `<span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">${s}</span>`;
+        });
+
+        inName.value = a.name;
+        inDesc1.value = a.desc1;
+        inDesc2.value = a.desc2;
+        inSkills.value = a.skills.join(",");
+      }
+
+      function openEdit() {
+        editModal.classList.remove("hidden");
+      }
+      function closeEdit() {
+        editModal.classList.add("hidden");
+      }
+
+      async function saveAbout() {
+        let file = inImageFile.files[0];
+        let img = inImageURL.value || getAbout().image;
+
+        if (file) {
+          img = await new Promise((res) => {
+            let r = new FileReader();
+            r.onload = (e) => res(e.target.result);
+            r.readAsDataURL(file);
+          });
+        }
+
+        let data = {
+          name: inName.value,
+          image: img,
+          desc1: inDesc1.value,
+          desc2: inDesc2.value,
+          skills: inSkills.value.split(",").map((s) => s.trim()),
+        };
+
+        localStorage.setItem("about", JSON.stringify(data));
+        location.reload();
+      }
+
+      loadAbout();
+    </script>
+  </body>
+</html>

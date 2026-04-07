@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bet History</title>
+    
+    <style>
+      body {
+        font-family: Arial;
+        background: #f4f6f9;
+      }
+      .container {
+        width: 90%;
+        margin: 40px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        text-align: center;
+        font-size: 24pt;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 22px;
+      }
+      th {
+        background: #2c7be5;
+        color: white;
+        padding: 12px;
+      }
+      td {
+        padding: 10px;
+        text-align: center;
+      }
+      td.id-number {
+        font-weight: bold;
+        color: black;
+        border: 2px solid #444;
+        vertical-align: middle; /* THIS centers the ID vertically */
+        text-align: center;
+        background: #f7f7f7;
+      } /* ID color fixed to black */
+      .win {
+        background: #d4edda;
+        color: green;
+        font-weight: bold;
+      }
+      .lose {
+        background: #f8d7da;
+        color: red;
+        font-weight: bold;
+      }
+      .pending {
+        background: white;
+        color: black;
+      }
+      button {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        margin: 2px;
+      }
+      .edit-btn {
+        background: #ffc107;
+      }
+      .update-btn {
+        background: #28a745;
+        color: white;
+      }
+      .delete-btn {
+        background: #dc3545;
+        color: white;
+      }
+      .back-btn {
+        padding: 10px 20px;
+        background: #333;
+        color: white;
+      }
+      #results {
+        margin-top: 20px;
+        font-size: 18px;
+        font-weight: bold;
+        text-align: right;
+      }
+      #saving {
+        display: none;
+        color: #2c7be5;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 22px;
+        border: 2px solid #444;
+      }
+
+      th {
+        background: #2c7be5;
+        color: white;
+        padding: 12px;
+        border: 1px solid #444;
+      }
+
+      td {
+        padding: 10px;
+        text-align: center;
+        border: 1px solid #444;
+      }
+      tr:hover {
+        background-color: #f1f1f1;
+      }
+      input {
+        width: 80px;
+        padding: 4px;
+      }
+      select {
+        padding: 4px;
+      }
+       nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #FFFFFF;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 50;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Logo */
+    .nav-logo a {
+      text-decoration: none;
+      color: #16A34A; /* Tailwind green-600 */
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    /* Menu */
+    .nav-menu {
+      list-style: none;
+      display: flex;
+      gap: 24px;
+    }
+
+    .nav-menu li a {
+      text-decoration: none;
+      color: #1F2937; /* Tailwind gray-800 */
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .nav-menu li a:hover {
+      color: #16A34A; /* Tailwind green-500 */
+    }
+
+    </style>
+  </head>
+  <body>
+    <nav>
+    <div class="nav-container">
+      <div class="nav-logo">
+        <a href="/index.html">Hout Management</a>
+      </div>
+      <ul class="nav-menu">
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/project.html">Project</a></li>
+        <li><a href="/aboutme.html">About Me</a></li>
+        <li><a href="/profile.html">Profile</a></li>
+      </ul>
+    </div>
+  </nav><br><br><br>
+    <div class="container">
+      <h2>Hout Betting History</h2>
+      <div id="saving">Saving...</div>
+
+      <div style=" justify-content: space-between">
+        <button class="back-btn" onclick="location = 'index.html'">
+          Add New Bet
+        </button>
+
+        <button
+          class="back-btn"
+          onclick="location = 'win_lose_by-day.html'"
+          style="background: #6f42c1"
+        >
+          Result By Day
+        </button>
+
+        <button
+          class="back-btn"
+          onclick="exportExcel()"
+          style="background: #2ca02c"
+        >
+          Export Excel
+        </button>
+      </div>
+
+      <div id="results">Total Win: $0 | Total Lose: $0 | Final Result: $0</div>
+      <br />
+
+      <table id="betTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Stake</th>
+            <th>Odd</th>
+            <th>Total</th>
+            <th>To Win</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <script>
+      const API =
+        "https://script.google.com/macros/s/AKfycbxo7i_X9KRKn2tm6qYy6FlZm_CSd_gaLoWIwGJmxqVxL9EtKcG6RR_RWpKGMU50Mew/exec";
+      const tableBody = document.querySelector("#betTable tbody");
+      const results = document.getElementById("results");
+      const saving = document.getElementById("saving");
+      let bets = [];
+
+      function formatDate(dateString) {
+        const d = new Date(dateString);
+        const day = String(d.getDate()).padStart(2, "0");
+        const month = String(d.getMonth() + 1).padStart(2, "0");
+        const year = d.getFullYear();
+        return `${day}/${month}/${year}`;
+      }
+
+      async function loadBets() {
+        const res = await fetch(API + "?action=get");
+        bets = await res.json();
+        renderTable();
+      }
+
+      function renderTable() {
+        tableBody.innerHTML = "";
+        let totalWin = 0,
+          totalLose = 0;
+
+        // Group by date
+        const dateGroups = {};
+        bets.forEach((b) => {
+          if (!dateGroups[b.date]) dateGroups[b.date] = [];
+          dateGroups[b.date].push(b);
+        });
+
+        let currentId = 1;
+
+        for (const date in dateGroups) {
+          const group = dateGroups[date];
+
+          group.forEach((b, index) => {
+            const total = (b.stake * b.odd).toFixed(2);
+            const toWin = parseFloat(b.toWin || 0);
+            const status = b.status || "pending";
+
+            if (status === "win") totalWin += toWin;
+            if (status === "lose") totalLose += parseFloat(b.stake);
+
+            const row = document.createElement("tr");
+            row.className = status;
+
+            row.innerHTML = `
+
+        ${
+          index === 0
+            ? `<td class="id-number" rowspan="${group.length}">${currentId}</td>`
+            : ""
+        }
+
+        <td>${formatDate(b.date)}</td>
+
+        <td>${b.stake}</td>
+
+        <td>${b.odd}</td>
+
+        <td>${total}</td>
+
+        <td>${toWin}</td>
+
+        <td>
+          <select onchange="changeStatus(this,${bets.indexOf(b)})">
+            <option value="pending" ${status == "pending" ? "selected" : ""}>Pending</option>
+            <option value="win" ${status == "win" ? "selected" : ""}>Win</option>
+            <option value="lose" ${status == "lose" ? "selected" : ""}>Lose</option>
+          </select>
+        </td>
+
+        <td>
+          <button class="edit-btn" onclick="editRow(${bets.indexOf(b)})">Edit</button>
+          <button class="update-btn" onclick="updateRow(${bets.indexOf(b)})">Update</button>
+          <button class="delete-btn" onclick="deleteRow(${bets.indexOf(b)})">Delete</button>
+        </td>
+
+      `;
+
+            tableBody.appendChild(row);
+          });
+
+          currentId++;
+        }
+
+        const final = totalWin - totalLose;
+
+        results.innerHTML = `Total Win: <span style="color:orange">$${totalWin.toFixed(2)}</span> |
+     Total Lose: <span style="color:blue">$${totalLose.toFixed(2)}</span> |
+     Final Result: <span style="color:${final >= 0 ? "green" : "red"}">$${final.toFixed(2)}</span>`;
+      }
+
+      function changeStatus(select, i) {
+        bets[i].status = select.value;
+        renderTable();
+        fetch(API, {
+          method: "POST",
+          body: JSON.stringify({ index: i, status: select.value }),
+        });
+      }
+
+      function editRow(i) {
+        const row = tableBody.rows[i];
+        row.cells[2].innerHTML = `<input type="number" value="${bets[i].stake}">`;
+        row.cells[3].innerHTML = `<input type="number" value="${bets[i].odd}">`;
+        row.cells[5].innerHTML = `<input type="number" value="${bets[i].toWin || 0}">`;
+      }
+
+      function updateRow(i) {
+        const row = tableBody.rows[i];
+        bets[i].stake = parseFloat(row.cells[2].querySelector("input").value);
+        bets[i].odd = parseFloat(row.cells[3].querySelector("input").value);
+        bets[i].toWin = parseFloat(row.cells[5].querySelector("input").value);
+        saving.style.display = "block";
+        renderTable();
+        fetch(API, {
+          method: "POST",
+          body: JSON.stringify({
+            index: i,
+            stake: bets[i].stake,
+            odd: bets[i].odd,
+            toWin: bets[i].toWin,
+          }),
+        }).finally(() => (saving.style.display = "none"));
+      }
+
+      function deleteRow(i) {
+        saving.style.display = "block";
+        bets.splice(i, 1);
+        renderTable();
+        fetch(API, {
+          method: "POST",
+          body: JSON.stringify({ index: i, delete: true }),
+        }).finally(() => (saving.style.display = "none"));
+      }
+
+      function exportExcel() {
+        let html = `<table border="1">
+  <tr>
+    <th>ID</th><th>Date</th><th>Stake</th><th>Odd</th><th>Total</th><th>To Win</th><th>Status</th>
+  </tr>`;
+        const dateGroups = {};
+        bets.forEach((b) => {
+          if (!dateGroups[b.date]) dateGroups[b.date] = [];
+          dateGroups[b.date].push(b);
+        });
+        let currentId = 1;
+        for (const date in dateGroups) {
+          const group = dateGroups[date];
+          const middle = Math.floor(group.length / 2);
+          group.forEach((b, index) => {
+            const total = (b.stake * b.odd).toFixed(2);
+            html += `<tr>
+        <td class="id-number">${index === middle ? currentId : ""}</td>
+        <td>${formatDate(b.date)}</td>
+        <td>${b.stake}</td>
+        <td>${b.odd}</td>
+        <td>${total}</td>
+        <td>${b.toWin || 0}</td>
+        <td>${b.status}</td>
+      </tr>`;
+          });
+          currentId++;
+        }
+        html += "</table>";
+        const blob = new Blob([html], { type: "application/vnd.ms-excel" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "HoutBettingHistory.xls";
+        a.click();
+      }
+
+      loadBets();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gmail Management | Hout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+    <style>
+      body { font-family: "Poppins", sans-serif; padding-top: 90px; }
+      .row-available { background-color: #f0fdf4 !important; }
+      .row-sold { background-color: #fef2f2 !important; }
+      .status-select { font-size: 1rem !important; }
+      #sync-indicator { display: none; }
+      button, select { transition: all 0.2s ease-in-out; }
+    </style>
+  </head>
+  <body class="bg-gray-50 flex flex-col min-h-screen text-gray-800">
+    
+    <nav class="fixed top-0 left-0 w-full bg-white shadow-md z-[100]">
+      <div class="max-w-full mx-auto px-8 py-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold text-green-600">
+          <a href="/index.html">Hout Management</a>
+        </h1>
+        <ul class="flex space-x-6 font-medium text-lg">
+          <li><a href="/index.html" class="hover:text-green-500">Home</a></li>
+          <li><a href="/project.html" class="hover:text-green-500">Project</a></li>
+          <li><a href="/aboutme.html" class="hover:text-green-500">About</a></li>
+          <li><a href="/profile.html" class="hover:text-green-500">Profile</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="flex-grow pb-12 px-8">
+      <div class="max-w-full mx-auto">
+        
+        <div class="mb-6 flex items-center">
+          <button onclick="window.history.back()" class="flex items-center text-gray-600 hover:text-green-600 font-semibold text-lg bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-100 transition" style="background-color: black; color: rgb(61, 244, 20);">
+            <i class="fas fa-arrow-left mr-2"></i> Back
+          </button>
+        </div>
+
+        <div id="sync-indicator" class="fixed bottom-5 right-5 bg-gray-800 text-white px-5 py-3 rounded-full text-sm flex items-center shadow-2xl z-50">
+            <i class="fas fa-sync fa-spin mr-3"></i> Syncing with Google Sheets...
+        </div>
+
+        <div class="flex flex-col xl:flex-row gap-10 items-start justify-center">
+          
+          <div class="w-full xl:w-4/5 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden relative">
+            <div class="p-6 border-b border-gray-100 bg-gray-50 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <h3 class="text-2xl font-bold text-gray-700">Account Database</h3>
+              
+              <div class="flex items-center gap-4">
+                <div class="bg-blue-100 text-blue-700 px-4 py-2 rounded-lg font-bold">Total: <span id="total-count">0</span></div>
+                <div class="bg-green-100 text-green-700 px-4 py-2 rounded-lg font-bold">Available: <span id="available-count">0</span></div>
+                <div class="bg-red-100 text-red-700 px-4 py-2 rounded-lg font-bold">Sold: <span id="sold-count">0</span></div>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse min-w-[900px]">
+                <thead>
+                  <tr class="bg-white text-gray-500 text-sm uppercase font-semibold border-b">
+                    <th class="px-6 py-5">ID</th>
+                    <th class="px-6 py-5">Date</th>
+                    <th class="px-6 py-5">Gmail Address</th>
+                    <th class="px-6 py-5">Password</th>
+                    <th class="px-6 py-5">Status</th>
+                    <th class="px-6 py-5 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="dataTable" class="divide-y divide-gray-100 text-lg"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="w-full xl:w-1/4 bg-white p-8 rounded-xl shadow-lg border border-green-100 sticky top-28">
+            <h3 class="text-2xl font-bold mb-6 text-green-700 flex items-center">
+              <i class="fas fa-plus-circle mr-3"></i> Quick Register
+            </h3>
+            <form id="gmailForm" class="space-y-6">
+              <input type="hidden" id="editId" value="" />
+              <div>
+                <label class="block text-lg font-semibold text-gray-600 mb-2">Gmail Username</label>
+                <div class="relative">
+                  <input type="text" id="gmailUser" required class="w-full pl-4 pr-32 py-3 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-green-500 focus:outline-none" placeholder="example" />
+                  <span class="absolute right-4 top-3.5 text-gray-400 text-lg font-medium">@gmail.com</span>
+                </div>
+              </div>
+              <div>
+                <label class="block text-lg font-semibold text-gray-600 mb-2">Password</label>
+                <input type="text" id="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-green-500 focus:outline-none" placeholder="Password" />
+              </div>
+              <div class="flex gap-3 pt-2">
+                <button type="submit" id="submitBtn" class="flex-grow bg-green-600 text-white py-3 rounded-lg text-lg font-bold hover:bg-green-700 shadow-md">Save Account</button>
+                <button type="button" id="cancelBtn" class="hidden px-6 bg-gray-200 text-gray-600 py-3 rounded-lg text-lg font-bold" onclick="resetForm()">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyKrYjZ0H27MkWKNjaO_P5Do2mCba0zeZZHcj-eyXBhhWk0tE1O_exSH-IXZ_kDzRz-yg/exec";
+      let inventory = [];
+
+      const form = document.getElementById("gmailForm");
+      const tableBody = document.getElementById("dataTable");
+      const submitBtn = document.getElementById("submitBtn");
+      const cancelBtn = document.getElementById("cancelBtn");
+      const editIdInput = document.getElementById("editId");
+      const syncIndicator = document.getElementById("sync-indicator");
+
+      async function getData() {
+        try {
+          const response = await fetch(SCRIPT_URL);
+          inventory = await response.json();
+          renderTable();
+        } catch (error) { console.error("Load failed:", error); }
+      }
+
+      async function backgroundSync(item, actionType) {
+        syncIndicator.style.display = "flex";
+        try {
+          await fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors", 
+            body: JSON.stringify({ ...item, action: actionType })
+          });
+        } catch (error) { alert("Sync Error. Data might not be saved."); }
+        syncIndicator.style.display = "none";
+      }
+
+      function renderTable() {
+        tableBody.innerHTML = "";
+        document.getElementById("total-count").innerText = inventory.length;
+        document.getElementById("available-count").innerText = inventory.filter(i => i.status === "Available").length;
+        document.getElementById("sold-count").innerText = inventory.filter(i => i.status === "Sold").length;
+
+        inventory.forEach((item) => {
+          const rowClass = item.status === "Available" ? "row-available" : "row-sold";
+          tableBody.insertAdjacentHTML("beforeend", `
+                <tr class="${rowClass}">
+                    <td class="px-6 py-5 font-bold text-gray-700">${item.id}</td>
+                    <td class="px-6 py-5 text-gray-500 font-medium">${item.date}</td>
+                    <td class="px-6 py-5 font-semibold text-gray-800">${item.gmail}</td>
+                    <td class="px-6 py-5 font-mono text-gray-600">${item.pass}</td>
+                    <td class="px-6 py-5">
+                        <select onchange="handleStatusUpdate(${item.id}, this.value)" class="status-select bg-transparent border-none font-bold cursor-pointer outline-none">
+                            <option value="Available" ${item.status === "Available" ? "selected" : ""}>Available</option>
+                            <option value="Sold" ${item.status === "Sold" ? "selected" : ""}>Sold</option>
+                        </select>
+                    </td>
+                    <td class="px-6 py-5 text-right space-x-4">
+                        <button onclick="editItem(${item.id})" class="text-blue-500 hover:text-blue-700 text-xl"><i class="fas fa-edit"></i></button>
+                        <button onclick="deleteItem(${item.id})" class="text-red-400 hover:text-red-600 text-xl"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `);
+        });
+      }
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const username = document.getElementById("gmailUser").value;
+        const pass = document.getElementById("password").value;
+        const editId = editIdInput.value;
+        const now = new Date();
+        const dateStr = `${String(now.getDate()).padStart(2, "0")}/${String(now.getMonth() + 1).padStart(2, "0")}/${now.getFullYear()}`;
+
+        if (editId) {
+            // Update existing
+            const idx = inventory.findIndex(i => i.id == editId);
+            inventory[idx] = { ...inventory[idx], gmail: username.includes("@") ? username : username + "@gmail.com", pass: pass };
+            renderTable();
+            backgroundSync(inventory[idx], "UPDATE");
+        } else {
+            // Add new
+            inventory.push({
+              id: inventory.length + 1,
+              date: dateStr,
+              gmail: username.includes("@") ? username : username + "@gmail.com",
+              pass: pass,
+              status: "Available"
+            });
+            renderTable();
+            backgroundSync(inventory[inventory.length - 1], "ADD");
+        }
+
+        resetForm();
+      });
+
+      function handleStatusUpdate(id, newStatus) {
+        const item = inventory.find(i => i.id === id);
+        if (item) {
+            item.status = newStatus;
+            renderTable();
+            backgroundSync(item, "UPDATE");
+        }
+      }
+
+      function deleteItem(id) {
+        if(confirm("Delete this entry?")) {
+            inventory = inventory.filter(i => i.id !== id);
+            // Reassign IDs sequentially
+            inventory = inventory.map((item, index) => ({ ...item, id: index + 1 }));
+            renderTable();
+            backgroundSync({ id: id }, "DELETE");
+        }
+      }
+
+      function editItem(id) {
+        const item = inventory.find((i) => i.id === id);
+        document.getElementById("gmailUser").value = item.gmail.replace("@gmail.com", "");
+        document.getElementById("password").value = item.pass;
+        editIdInput.value = item.id;
+        submitBtn.innerText = "Update Account";
+        submitBtn.classList.replace("bg-green-600", "bg-blue-600");
+        cancelBtn.classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function resetForm() {
+        form.reset();
+        editIdInput.value = "";
+        submitBtn.innerText = "Save Account";
+        submitBtn.classList.replace("bg-blue-600", "bg-green-600");
+        cancelBtn.classList.add("hidden");
+      }
+
+      getData();
+    </script>
+  </body>
+</html>

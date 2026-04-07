@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>8BP Management | Hout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+    <style>
+      body { font-family: "Poppins", sans-serif; padding-top: 90px; }
+      .row-available { background-color: #f0fdf4 !important; }
+      .row-sold { background-color: #fef2f2 !important; }
+      .connection-badge { font-size: 0.75rem; padding: 3px 8px; border-radius: 6px; font-weight: bold; }
+      .bg-mc { background-color: #fbbf24; color: #000; }
+      .bg-fb { background-color: #1877f2; color: #fff; }
+      .bg-gm { background-color: #ea4335; color: #fff; }
+      .cred-row { display: flex; align-items: center; margin-bottom: 4px; font-size: 14px; }
+      .bar-gm { border-left: 4px solid #ea4335; padding-left: 8px; }
+      .bar-fb { border-left: 4px solid #1877f2; padding-left: 8px; }
+      .bar-mc { border-left: 4px solid #fbbf24; padding-left: 8px; }
+      #sync-indicator { display: none; }
+    </style>
+  </head>
+  <body class="bg-gray-100 min-h-screen text-gray-800">
+    
+    <nav class="fixed top-0 left-0 w-full bg-white shadow-md z-[100]">
+      <div class="max-w-full mx-auto px-8 py-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-green-600 tracking-tight">8BP Management</h1>
+        <ul class="flex space-x-8 font-semibold text-lg text-gray-600">
+          <li><a href="/index.html" class="hover:text-green-600 transition">Home</a></li>
+          <li><a href="/project.html" class="hover:text-green-600 transition">Project</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="pb-12 px-8">
+      <div class="max-w-full mx-auto">
+        <div class="mb-6 flex flex-wrap justify-between items-center gap-4">
+            <button onclick="window.history.back()" class="px-6 py-2.5 rounded-xl font-bold shadow-lg hover:scale-105 transition transform active:scale-95" style="background-color: #000; color: #3df414;">
+                <i class="fas fa-arrow-left mr-2"></i> Back
+            </button>
+            <div class="flex flex-wrap gap-4">
+                <div class="bg-white border border-gray-200 text-gray-700 px-5 py-2 rounded-xl font-bold shadow-sm">Total: <span id="total-count" class="text-xl">0</span></div>
+                <div class="bg-white border border-green-200 text-green-700 px-5 py-2 rounded-xl font-bold shadow-sm">Available: <span id="available-count" class="text-xl">0</span></div>
+                <div class="bg-white border border-red-200 text-red-700 px-5 py-2 rounded-xl font-bold shadow-sm">Sold: <span id="sold-count" class="text-xl">0</span></div>
+            </div>
+        </div>
+
+        <div id="sync-indicator" class="fixed bottom-8 right-8 bg-black text-white px-8 py-4 rounded-2xl text-base flex items-center shadow-2xl z-50 border-2 border-green-500">
+            <i class="fas fa-sync fa-spin mr-3 text-green-400"></i> Syncing...
+        </div>
+
+        <div class="flex flex-col xl:flex-row gap-8 items-start">
+          <div class="w-full xl:w-3/4 bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left min-w-[1100px]">
+                <thead>
+                  <tr class="bg-gray-50 text-gray-500 text-sm uppercase tracking-widest border-b">
+                    <th class="px-6 py-5">ID</th>
+                    <th class="px-6 py-5">Game ID</th>
+                    <th class="px-6 py-5">Types</th>
+                    <th class="px-6 py-5">ALL Connect | Password</th>
+                    <th class="px-6 py-5">Status</th>
+                    <th class="px-6 py-5 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="dataTable" class="divide-y divide-gray-100">
+                    <tr><td colspan="6" class="p-20 text-center text-gray-400 text-xl font-medium">Connecting...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="w-full xl:w-1/4 bg-white p-8 rounded-2xl shadow-2xl border border-green-100 sticky top-28">
+            <h3 class="text-xl font-bold mb-6 text-gray-800 flex items-center">
+                <i class="fas fa-plus-circle mr-2 text-green-600"></i> Register Account
+            </h3>
+            <form id="bpForm" class="space-y-5">
+              <input type="hidden" id="editId" value="" />
+              <div>
+                <label class="block text-xs font-bold text-gray-400 uppercase mb-1 ml-1">Game ID</label>
+                <input type="text" id="gameId" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 outline-none transition text-lg font-semibold" placeholder="000-000-000" />
+              </div>
+              <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                <p class="text-xs font-bold text-gray-400 uppercase mb-3">Login Connections:</p>
+                <div class="flex flex-wrap gap-5 text-sm font-semibold">
+                  <label class="flex items-center cursor-pointer"><input type="checkbox" value="Gmail" class="conn-check mr-2 h-5 w-5 accent-red-500"> Gmail</label>
+                  <label class="flex items-center cursor-pointer"><input type="checkbox" value="Facebook" class="conn-check mr-2 h-5 w-5 accent-blue-600"> FB</label>
+                  <label class="flex items-center cursor-pointer"><input type="checkbox" value="Miniclip" class="conn-check mr-2 h-5 w-5 accent-yellow-500"> MC</label>
+                </div>
+              </div>
+              <div id="gmailGroup" class="hidden space-y-3 p-3 bg-red-50 rounded-xl border border-red-100">
+                <div class="flex"><input type="text" id="gmUser" class="w-full p-3 text-sm border rounded-l-xl outline-none" placeholder="Gmail User"><span class="bg-white border border-l-0 rounded-r-xl px-3 flex items-center text-xs text-gray-400">@gmail.com</span></div>
+                <input type="text" id="gmPass" class="w-full p-3 text-sm border rounded-xl outline-none" placeholder="Gmail Password">
+              </div>
+              <div id="fbGroup" class="hidden space-y-3 p-3 bg-blue-50 rounded-xl border border-blue-100">
+                <input type="text" id="fbUser" class="w-full p-3 text-sm border rounded-xl outline-none" placeholder="FB Username">
+                <input type="text" id="fbPass" class="w-full p-3 text-sm border rounded-xl outline-none" placeholder="FB Password">
+              </div>
+              <div id="mcGroup" class="hidden space-y-3 p-3 bg-yellow-50 rounded-xl border border-yellow-100">
+                <input type="text" id="mcUser" class="w-full p-3 text-sm border rounded-xl outline-none" placeholder="MC Email">
+                <input type="text" id="mcPass" class="w-full p-3 text-sm border rounded-xl outline-none" placeholder="MC Password">
+              </div>
+              <button type="submit" id="submitBtn" class="w-full bg-green-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-green-700 transition transform active:scale-95">Save Account</button>
+              <button type="button" id="cancelBtn" class="hidden w-full bg-gray-200 text-gray-600 py-3 rounded-xl font-bold mt-2" onclick="resetForm()">Cancel Edit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzU2RNPFJnBuE_rkma4rgHSFl92vb3dw9KzkqroAKX1XicGME6ZFbNcFvrxw1IdH-6wYQ/exec";
+      let inventory = [];
+
+      document.querySelectorAll('.conn-check').forEach(check => {
+        check.addEventListener('change', () => {
+          document.getElementById('gmailGroup').classList.toggle('hidden', !document.querySelector('input[value="Gmail"]').checked);
+          document.getElementById('fbGroup').classList.toggle('hidden', !document.querySelector('input[value="Facebook"]').checked);
+          document.getElementById('mcGroup').classList.toggle('hidden', !document.querySelector('input[value="Miniclip"]').checked);
+        });
+      });
+
+      async function getData() {
+        try {
+          const res = await fetch(SCRIPT_URL);
+          inventory = await res.json();
+          renderTable();
+        } catch (e) { console.error(e); }
+      }
+
+      // INSTANT UI UPDATE LOGIC
+      async function backgroundSync(item, action) {
+        document.getElementById("sync-indicator").style.display = "flex";
+        
+        // Update Local UI Immediately
+        if(action === "ADD") {
+            inventory.push(item);
+        } else if(action === "UPDATE") {
+            const index = inventory.findIndex(i => i.id == item.id);
+            if(index !== -1) inventory[index] = item;
+        } else if(action === "DELETE") {
+            inventory = inventory.filter(i => i.id != item.id);
+        }
+        
+        renderTable(); // Re-render immediately before talking to server
+
+        // Send to Server in background
+        fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({...item, action}) })
+          .then(() => {
+              document.getElementById("sync-indicator").style.display = "none";
+              // Final sync to make sure IDs and data match the server perfectly
+              setTimeout(getData, 2000); 
+          });
+      }
+
+      function renderTable() {
+        const tbody = document.getElementById("dataTable");
+        tbody.innerHTML = "";
+        document.getElementById("total-count").innerText = inventory.length;
+        document.getElementById("available-count").innerText = inventory.filter(i => i.status === "Available").length;
+        document.getElementById("sold-count").innerText = inventory.filter(i => i.status === "Sold").length;
+
+        inventory.forEach(item => {
+          const badges = item.connections.split(',').filter(c => c).map(c => `<span class="connection-badge ${c==='Gmail'?'bg-gm':c==='Facebook'?'bg-fb':'bg-mc'} mr-1">${c}</span>`).join('');
+          tbody.insertAdjacentHTML("beforeend", `
+            <tr class="${item.status === 'Available' ? 'row-available' : 'row-sold'} transition hover:brightness-95">
+              <td class="px-6 py-6 font-bold text-gray-500">${item.id}</td>
+              <td class="px-6 py-6 font-bold text-gray-900 text-lg">${item.gameId}</td>
+              <td class="px-6 py-6">${badges}</td>
+              <td class="px-6 py-6">
+                ${item.gmU ? `<div class="cred-row bar-gm"><span>${item.gmU}@gmail.com</span><span class="mx-2 text-gray-300">|</span><span class="text-red-600 font-bold">${item.gmP}</span></div>` : ''}
+                ${item.fbU ? `<div class="cred-row bar-fb"><span>${item.fbU}</span><span class="mx-2 text-gray-300">|</span><span class="text-blue-600 font-bold">${item.fbP}</span></div>` : ''}
+                ${item.mcU ? `<div class="cred-row bar-mc"><span>${item.mcU}</span><span class="mx-2 text-gray-300">|</span><span class="text-yellow-600 font-bold">${item.mcP}</span></div>` : ''}
+              </td>
+              <td class="px-6 py-6">
+                <select onchange="updateStatus(${item.id}, this.value)" class="bg-white border rounded-lg px-3 py-1.5 font-bold text-sm outline-none cursor-pointer">
+                  <option value="Available" ${item.status==='Available'?'selected':''}>Available</option>
+                  <option value="Sold" ${item.status==='Sold'?'selected':''}>Sold</option>
+                </select>
+              </td>
+              <td class="px-6 py-6 text-right space-x-4">
+                <button onclick="edit(${item.id})" class="text-blue-500 text-xl"><i class="fas fa-edit"></i></button>
+                <button onclick="del(${item.id})" class="text-red-400 text-xl"><i class="fas fa-trash"></i></button>
+              </td>
+            </tr>
+          `);
+        });
+      }
+
+      document.getElementById("bpForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const editId = document.getElementById("editId").value;
+        const checks = Array.from(document.querySelectorAll('.conn-check:checked')).map(c => c.value);
+        const data = {
+          id: editId || (inventory.length > 0 ? Math.max(...inventory.map(i => i.id)) + 1 : 1),
+          gameId: document.getElementById("gameId").value,
+          connections: checks.join(','),
+          gmU: document.getElementById('gmUser').value, gmP: document.getElementById('gmPass').value,
+          fbU: document.getElementById('fbUser').value, fbP: document.getElementById('fbPass').value,
+          mcU: document.getElementById('mcUser').value, mcP: document.getElementById('mcPass').value,
+          status: "Available"
+        };
+        backgroundSync(data, editId ? "UPDATE" : "ADD");
+        resetForm();
+      });
+
+      function updateStatus(id, status) {
+        const item = {...inventory.find(i => i.id == id)};
+        item.status = status;
+        backgroundSync(item, "UPDATE");
+      }
+
+      function del(id) { if(confirm("Delete account " + id + "?")) backgroundSync({id}, "DELETE"); }
+
+      function edit(id) {
+        const item = inventory.find(i => i.id == id);
+        document.getElementById("editId").value = item.id;
+        document.getElementById("gameId").value = item.gameId;
+        document.querySelectorAll('.conn-check').forEach(c => {
+            c.checked = item.connections.includes(c.value);
+            c.dispatchEvent(new Event('change'));
+        });
+        document.getElementById('gmUser').value = item.gmU || '';
+        document.getElementById('gmPass').value = item.gmP || '';
+        document.getElementById('fbUser').value = item.fbU || '';
+        document.getElementById('fbPass').value = item.fbP || '';
+        document.getElementById('mcUser').value = item.mcU || '';
+        document.getElementById('mcPass').value = item.mcP || '';
+        document.getElementById("submitBtn").innerText = "Update Changes";
+        document.getElementById("cancelBtn").classList.remove("hidden");
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      }
+
+      function resetForm() {
+        document.getElementById("bpForm").reset();
+        document.getElementById("editId").value = "";
+        document.querySelectorAll('.conn-check').forEach(c => c.dispatchEvent(new Event('change')));
+        document.getElementById("submitBtn").innerText = "Save Account";
+        document.getElementById("cancelBtn").classList.add("hidden");
+      }
+
+      getData();
+    </script>
+  </body>
+</html>

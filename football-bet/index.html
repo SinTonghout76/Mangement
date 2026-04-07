@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Add Bet</title>
+    <link rel="stylesheet" href="style.css" />
+    
+
+ 
+     <style>
+      /* Page Layout */
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: #f4f6f9;
+      }
+
+      /* Card */
+
+      .container {
+        width: 100%;
+        max-width: 420px;
+        background: white;
+        padding: 30px;
+        border-radius: 14px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Title */
+
+      h2 {
+        text-align: center;
+        margin-bottom: 25px;
+      }
+
+      /* Form */
+
+      .form-group {
+        margin-bottom: 18px;
+        text-align: left;
+      }
+
+      label {
+        font-weight: bold;
+        font-size: 14px;
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        transition: 0.2s;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #2c7be5;
+        box-shadow: 0 0 0 2px rgba(44, 123, 229, 0.2);
+      }
+
+      /* Buttons */
+
+      button {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: 0.2s;
+      }
+
+      .primary-btn {
+        background: #2c7be5;
+        color: white;
+      }
+
+      .primary-btn:hover {
+        background: #1a5bb8;
+      }
+
+      .secondary-btn {
+        background: #555;
+        color: white;
+      }
+
+      .secondary-btn:hover {
+        background: #333;
+      }
+
+      button:disabled {
+        background: #999;
+        cursor: not-allowed;
+      }
+
+      /* Mobile */
+
+      @media (max-width: 500px) {
+        .container {
+          padding: 20px;
+        }
+
+        h2 {
+          font-size: 20px;
+        }
+      }
+       nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #FFFFFF;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 50;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Logo */
+    .nav-logo a {
+      text-decoration: none;
+      color: #16A34A; /* Tailwind green-600 */
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    /* Menu */
+    .nav-menu {
+      list-style: none;
+      display: flex;
+      gap: 24px;
+    }
+
+    .nav-menu li a {
+      text-decoration: none;
+      color: #1F2937; /* Tailwind gray-800 */
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .nav-menu li a:hover {
+      color: #16A34A; /* Tailwind green-500 */
+    }
+
+    </style>
+  </head>
+  <body>
+    <nav>
+    <div class="nav-container">
+      <div class="nav-logo">
+        <a href="/index.html">Hout Management</a>
+      </div>
+      <ul class="nav-menu">
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/project.html">Project</a></li>
+        <li><a href="/aboutme.html">About Me</a></li>
+        <li><a href="/profile.html">Profile</a></li>
+      </ul>
+    </div>
+  </nav>
+    <div class="container">
+        
+      <h2>Add Bet</h2>
+
+      <label>Date:</label>
+      <input type="date" id="betDate" />
+
+      <label>Stake ($):</label>
+      <input type="number" id="stake" />
+
+      <label>Odd:</label>
+      <input type="number" id="odd" step="0.01" />
+
+      <button id="submitBtn" onclick="saveBet()">Submit</button>
+      <button onclick="goToTable()" style="background-color: #555">
+        View Bet History
+      </button>
+    </div>
+
+    <script>
+      const API =
+        "https://script.google.com/macros/s/AKfycbxo7i_X9KRKn2tm6qYy6FlZm_CSd_gaLoWIwGJmxqVxL9EtKcG6RR_RWpKGMU50Mew/exec";
+
+      async function saveBet() {
+        const date = document.getElementById("betDate").value;
+        const stake = parseFloat(document.getElementById("stake").value);
+        const odd = parseFloat(document.getElementById("odd").value);
+        const submitBtn = document.getElementById("submitBtn");
+
+        if (!date || !stake || !odd) return;
+
+        const bet = { date, stake, odd, toWin: "", status: "pending" };
+
+        // Disable button to prevent double clicks
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Saving...";
+
+        try {
+          const res = await fetch(API, {
+            method: "POST",
+            body: JSON.stringify(bet),
+          });
+          // Wait for server response before redirecting
+          if (res.ok) {
+            window.location.href = "table.html";
+          } else {
+            console.error("Server responded with error");
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Submit";
+          }
+        } catch (err) {
+          console.error("Error saving to Google Sheet:", err);
+          submitBtn.disabled = false;
+          submitBtn.innerText = "Submit";
+        }
+      }
+
+      function goToTable() {
+        window.location.href = "table.html";
+      }
+    </script>
+  </body>
+</html>

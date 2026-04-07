@@ -1,0 +1,14 @@
+Gmail API:
+    https://script.google.com/macros/s/AKfycbyKrYjZ0H27MkWKNjaO_P5Do2mCba0zeZZHcj-eyXBhhWk0tE1O_exSH-IXZ_kDzRz-yg/exec
+Gmail Sheet View:
+    https://docs.google.com/spreadsheets/d/11t6oU0VZbSoBg5skNEnHlU7ABi6x8mw8FE9CS2mKHbI/edit?usp=sharing
+
+
+8BP API:
+    https://script.google.com/macros/s/AKfycbzU2RNPFJnBuE_rkma4rgHSFl92vb3dw9KzkqroAKX1XicGME6ZFbNcFvrxw1IdH-6wYQ/exec
+8BP Sheet View:
+    https://docs.google.com/spreadsheets/d/1B7umt2FdnqSCS94uAs5E-UN9eeXOCNRDeiuB5TAnUR4/edit?usp=sharing
+
+
+Footbal API:
+    https://script.google.com/macros/s/AKfycbxo7i_X9KRKn2tm6qYy6FlZm_CSd_gaLoWIwGJmxqVxL9EtKcG6RR_RWpKGMU50Mew/exec

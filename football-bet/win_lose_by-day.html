@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Year Result</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f6f9;
+}
+
+.container{
+width:95%;
+margin:40px auto;
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 10px 25px rgba(0,0,0,0.1);
+}
+
+h1{
+text-align:center;
+margin-bottom:30px;
+}
+
+.year-grid{
+display:grid;
+grid-template-columns:repeat(4,1fr); /* 4 months per row */
+gap:20px;
+}
+
+.month{
+border:1px solid #ddd;
+border-radius:10px;
+padding:10px;
+background:#fafafa;
+}
+
+.month-title{
+text-align:center;
+font-weight:bold;
+font-size:18px;
+margin-bottom:8px;
+}
+
+.days-header{
+display:grid;
+grid-template-columns:repeat(7,1fr);
+font-size:12px;
+text-align:center;
+margin-bottom:5px;
+}
+
+.calendar{
+display:grid;
+grid-template-columns:repeat(7,1fr);
+gap:4px;
+}
+
+.day{
+height:55px;
+border-radius:6px;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+font-size:15px;
+border:1px solid #ddd;
+}
+
+.day-number{
+font-size:16px;
+}
+
+.result{
+font-size:14px;
+}
+
+/* COLORS */
+
+.win{
+background:#28a745;
+color:#ffffff;
+}
+
+.lose{
+background:#dc3545;
+color:#ffffff;
+}
+
+.neutral{
+background:white;
+color:black;
+}
+
+.nobet{
+color:#bbb;
+}
+
+.empty{
+border:none;
+background:transparent;
+}
+
+button{
+padding:10px 20px;
+border:none;
+background:#333;
+color:white;
+border-radius:6px;
+cursor:pointer;
+margin-bottom:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<button onclick="location='table.html'">⬅ Back</button>
+
+<h1 id="yearTitle"></h1>
+
+<div class="year-grid" id="yearGrid"></div>
+
+</div>
+
+<script>
+
+const API="https://script.google.com/macros/s/AKfycbxo7i_X9KRKn2tm6qYy6FlZm_CSd_gaLoWIwGJmxqVxL9EtKcG6RR_RWpKGMU50Mew/exec"
+
+const yearGrid=document.getElementById("yearGrid")
+const yearTitle=document.getElementById("yearTitle")
+
+const currentYear=new Date().getFullYear()
+
+yearTitle.innerText="Results "+currentYear
+
+const months=[
+"January","February","March","April","May","June",
+"July","August","September","October","November","December"
+]
+
+async function load(){
+
+const res=await fetch(API+"?action=get")
+const bets=await res.json()
+
+const daily={}
+
+bets.forEach(b=>{
+
+const d=new Date(b.date)
+
+if(d.getFullYear()!=currentYear) return
+
+const key=`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`
+
+if(!daily[key]) daily[key]={win:0,lose:0}
+
+if(b.status==="win") daily[key].win+=parseFloat(b.toWin||0)
+
+if(b.status==="lose") daily[key].lose+=parseFloat(b.stake||0)
+
+})
+
+renderYear(daily)
+
+}
+
+function renderYear(data){
+
+yearGrid.innerHTML=""
+
+for(let m=0;m<12;m++){
+
+const monthDiv=document.createElement("div")
+monthDiv.className="month"
+
+let html=`<div class="month-title">${months[m]}</div>`
+
+html+=`<div class="days-header">
+<div>Sun</div><div>Mon</div><div>Tue</div>
+<div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+</div>`
+
+html+=`<div class="calendar">`
+
+const firstDay=new Date(currentYear,m,1).getDay()
+const daysInMonth=new Date(currentYear,m+1,0).getDate()
+
+for(let i=0;i<firstDay;i++){
+html+=`<div class="empty"></div>`
+}
+
+for(let d=1;d<=daysInMonth;d++){
+
+const key=`${currentYear}-${m}-${d}`
+
+let className="day nobet"
+let resultHTML=""
+
+if(data[key]){
+
+const final=data[key].win-data[key].lose
+
+if(final>0){
+className="day win"
+resultHTML=`<div class="result">+$${final.toFixed(0)}</div>`
+}
+else if(final<0){
+className="day lose"
+resultHTML=`<div class="result">-$${Math.abs(final).toFixed(0)}</div>`
+}
+else{
+className="day neutral"
+resultHTML=`<div class="result">$0</div>`
+}
+
+}
+
+html+=`
+<div class="${className}">
+<div class="day-number">${d}</div>
+${resultHTML}
+</div>
+`
+
+}
+
+html+="</div>"
+
+monthDiv.innerHTML=html
+
+yearGrid.appendChild(monthDiv)
+
+}
+
+}
+
+load()
+
+</script>
+
+</body>
+</html>
